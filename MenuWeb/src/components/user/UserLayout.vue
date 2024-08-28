@@ -1,5 +1,12 @@
 <script setup>
+    import {useUserMenuStore} from '@/stores/user/menu'
 
+    const menuTypeStore = useUserMenuStore()
+
+
+    const getType = (selected) =>{
+        menuTypeStore.selectedType = selected
+    }
 </script>
 <template>
     <div class="drawer lg:drawer-open">
@@ -13,7 +20,7 @@
                     </label>
                     <div class="flex justify-end gap-2 mx-2 w-full">
                         <div class="form-control">
-                            <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+                            <input type="text" placeholder="Search" class="input input-bordered w-full " />
                         </div>
                         <div class="dropdown dropdown-end mx-2">
                             <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -52,12 +59,23 @@
             <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
             <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
                 <!-- Sidebar content here -->
-                 <p class="text-3xl text-center btn btn-ghost">Restuarant</p>
-                 <div class="mt-8">
-                     <li><a>Sidebar Item 1</a></li>
-                     <li><a>Sidebar Item 2</a></li>
+                <p class="text-3xl text-center font-bold btn btn-ghost">Restuarant</p>
 
-                 </div>
+                <div class="mt-8">
+                    <li class="text-2xl">รายการเมนูอาหาร</li>
+                    <div class="my-4">
+                        <li class="text-lg"  @click="getType('รายการอาหารทั้งหมด')"><a>รายการอาหารทั้งหมด</a></li>
+                        <li v-for="menutype in menuTypeStore.menuType" class="text-lg">
+                            <details>
+                                <summary>{{menutype.mainType}}</summary>
+                                <ul class="bg-white" v-if="menutype.supType">
+                                    <li v-for="subType in menutype.supType" @click="getType(subType)"><a>{{subType}}</a></li>
+                                </ul>
+                            </details>
+                        </li>
+                    </div>
+
+                </div>
             </ul>
         </div>
     </div>
